@@ -7,13 +7,17 @@ use Exception;
 class Parser
 {
     private State $state = State::HTML;
+
     private int $pos = 0;
 
     private ?string $string = null;
+
     private int $depth = 0;
 
     private string $stringBuffer = '';
+
     private string $current = '';
+
     private array $parsed = [];
 
     public function __construct(private array $tokens) {}
@@ -25,11 +29,11 @@ class Parser
         }
 
         if ($this->string || $this->stringBuffer) {
-            throw new Exception("Unterminated string");
+            throw new Exception('Unterminated string');
         }
 
         if ($this->state !== State::HTML) {
-            throw new Exception("Some block not terminated");
+            throw new Exception('Some block not terminated');
         }
 
         $this->memorizeAs('html', trim: false);
@@ -66,19 +70,22 @@ class Parser
         if ($this->string) {
             if ($token === '\\') {
                 $this->stringBuffer .= '\\'.$next_token;
+
                 return 2;
             }
 
             // terminate a string
             if ($token === $this->string) {
-                $this->current .= $this->string . $this->stringBuffer . $this->string;
+                $this->current .= $this->string.$this->stringBuffer.$this->string;
                 $this->string = null;
                 $this->stringBuffer = '';
+
                 return 1;
             }
 
             // continue a string
             $this->stringBuffer .= $token;
+
             return 1;
         }
 
@@ -86,16 +93,19 @@ class Parser
             if ($token === '{' && $next_token === '{') {
                 $this->memorizeAs('html', trim: false);
                 $this->state = State::HEAD;
+
                 return 2;
             }
 
             $this->current .= $token;
+
             return 1;
         }
 
         // start a string
         if ($token === '"' || $token === "'") {
             $this->string = $token;
+
             return 1;
         }
 
@@ -103,28 +113,33 @@ class Parser
             if ($token === '{') {
                 $this->depth++;
                 $this->current .= '{';
+
                 return 1;
             }
 
             if ($token === ':') {
                 $this->memorizeAs('head', trim: true);
                 $this->state = State::ARGS;
+
                 return 1;
             }
 
             if ($this->depth > 0 && $token === '}') {
                 $this->depth--;
                 $this->current .= '}';
+
                 return 1;
             }
 
             if ($token === '}' && $next_token === '}') {
                 $this->memorizeAs('head', trim: true);
                 $this->state = State::HTML;
+
                 return 2;
             }
 
             $this->current .= $token;
+
             return 1;
         }
 
@@ -132,17 +147,19 @@ class Parser
             if ($token === '}' && $next_token === '}') {
                 $this->memorizeAs('args', trim: true, extend: true);
                 $this->state = State::HTML;
+
                 return 2;
             }
 
             $this->current .= $token;
+
             return 1;
         }
     }
 
     public function dump(): void
     {
-        foreach($this->parsed as $block) {
+        foreach ($this->parsed as $block) {
             foreach ($block as $key => $value) {
                 echo "$key: '$value' ";
             }

@@ -2,8 +2,6 @@
 
 namespace LeoNickl\Plate;
 
-use Exception;
-
 class Plate
 {
     private function __construct(private string $raw) {}

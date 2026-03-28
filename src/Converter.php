@@ -12,8 +12,8 @@ class Converter
     {
         $php = '';
 
-        foreach($this->parsed as $block) {
-            $php .= $this->convertBlock((object)$block);
+        foreach ($this->parsed as $block) {
+            $php .= $this->convertBlock((object) $block);
         }
 
         return $php;
@@ -46,24 +46,25 @@ class Converter
 
         if ($head) {
             if ($block->head === 'else') {
-                return "<?php else: ?>";
+                return '<?php else: ?>';
             }
 
             if ($block->head === 'if;') {
-                return "<?php endif ?>";
+                return '<?php endif ?>';
             }
 
             if ($block->head === 'each;') {
-                return "<?php endforeach ?>";
+                return '<?php endforeach ?>';
             }
 
-            if(str_starts_with($block->head, '==')) {
+            if (str_starts_with($block->head, '==')) {
                 $expression = substr($block->head, 2);
+
                 return "<?php echo $expression ?>";
             }
 
-            if(str_starts_with($block->head, '#')) {
-                return "";
+            if (str_starts_with($block->head, '#')) {
+                return '';
             }
 
             return "<?php echo htmlspecialchars(join(' ', [$block->head])) ?>";
@@ -73,6 +74,6 @@ class Converter
             return "<?php $block->args; ?>";
         }
 
-        throw new Exception("Illegal block");
+        throw new Exception('Illegal block');
     }
 }
