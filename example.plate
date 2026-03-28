@@ -1,6 +1,6 @@
 <h1>This is some sample plate!</h1>
 
-{{ # conditional rendering }}
+<h2>conditional rendering</h2>
 
     {{ if: 4 > 8 }}
         {{ :$var = "<p>hidden</p>" }}
@@ -12,7 +12,8 @@
 
     {{ true ? 'yes' : 'no' }}
 
-{{ # printing }}
+
+<h2>printing</h2>
 
     {{ # escaped: }}
     {{ $var }}
@@ -21,12 +22,13 @@
     {{ ==$var }}
 
     {{ # single expression: }}
-    {{ 4 }}
+    {{ "huhu" }}
 
     {{ # multiple expressions joined with a space: }}
-    {{ 1, 2, 3 }}
+    {{ "haha", "hehe", "hihi" }}
 
-{{ # loops: }}
+
+<h2>loops</h2>
 
     {{ each: [1, 2, 3, 8, 10] as $x }}
         {{ -$x, "\n" }}
