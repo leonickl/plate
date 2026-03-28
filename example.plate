@@ -1,0 +1,32 @@
+<h1>This is some sample plate!</h1>
+
+{{ # conditional rendering }}
+
+{{ if: 4 > 8 }}
+    {{ :$var = "<p>hidden</p>" }}
+{{ elseif: 5 < 9}}
+    {{ :$var = "<p>also yes</p>" }}
+{{ else }}
+    {{ :$var = "<p>no</p>" }}
+{{ if; }}
+
+
+{{ # printing }}
+
+{{ # escaped: }}
+{{ $var }}
+
+{{ # unescaped: }}
+{{ ==$var }}
+
+{{ # single expression: }}
+{{ 4 }}
+
+{{ # multiple expressions joined with a space: }}
+{{ 1, 2, 3 }}
+
+{{ # foreach loop: }}
+
+{{ each: [1, 2, 3, 8, 10] as $x }}
+    {{ -$x, "\n" }}
+{{ each; }}

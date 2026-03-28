@@ -1,0 +1,17 @@
+{
+    "name": "leonickl/plate",
+    "description": "A PHP templating engine",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "LeoNickl\\Plate\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Leo Nickl",
+            "email": "leo@leonickl.de"
+        }
+    ],
+    "require": {}
+}
