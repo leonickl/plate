@@ -2,31 +2,31 @@
 
 {{ # conditional rendering }}
 
-{{ if: 4 > 8 }}
-    {{ :$var = "<p>hidden</p>" }}
-{{ elseif: 5 < 9}}
-    {{ :$var = "<p>also yes</p>" }}
-{{ else }}
-    {{ :$var = "<p>no</p>" }}
-{{ if; }}
+    {{ if: 4 > 8 }}
+        {{ :$var = "<p>hidden</p>" }}
+    {{ elseif: 5 < 9}}
+        {{ :$var = "<p>also yes</p>" }}
+    {{ else }}
+        {{ :$var = "<p>no</p>" }}
+    {{ if; }}
 
 
 {{ # printing }}
 
-{{ # escaped: }}
-{{ $var }}
+    {{ # escaped: }}
+    {{ $var }}
 
-{{ # unescaped: }}
-{{ ==$var }}
+    {{ # unescaped: }}
+    {{ ==$var }}
 
-{{ # single expression: }}
-{{ 4 }}
+    {{ # single expression: }}
+    {{ 4 }}
 
-{{ # multiple expressions joined with a space: }}
-{{ 1, 2, 3 }}
+    {{ # multiple expressions joined with a space: }}
+    {{ 1, 2, 3 }}
 
 {{ # foreach loop: }}
 
-{{ each: [1, 2, 3, 8, 10] as $x }}
-    {{ -$x, "\n" }}
-{{ each; }}
+    {{ each: [1, 2, 3, 8, 10] as $x }}
+        {{ -$x, "\n" }}
+    {{ each; }}
