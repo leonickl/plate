@@ -2,6 +2,4 @@
 
 require 'vendor/autoload.php';
 
-echo LeoNickl\Plate\Plate::file('example.plate')
-    ->parse()
-    ->toPHP();
+echo LeoNickl\Plate\Plate::file('example.plate');

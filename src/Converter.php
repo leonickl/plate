@@ -1,0 +1,78 @@
+<?php
+
+namespace LeoNickl\Plate;
+
+use Exception;
+
+class Converter
+{
+    public function __construct(private array $parsed) {}
+
+    public function convert(): string
+    {
+        $php = '';
+
+        foreach($this->parsed as $block) {
+            $php .= $this->convertBlock((object)$block);
+        }
+
+        return $php;
+    }
+
+    private function convertBlock(object $block): string
+    {
+        if (property_exists($block, 'html')) {
+            return $block->html;
+        }
+
+        $head = property_exists($block, 'head') && $block->head !== '';
+        $args = property_exists($block, 'args') && $block->args !== '';
+
+        if ($head && $args) {
+            if ($block->head === 'if') {
+                return "<?php if ($block->args): ?>";
+            }
+
+            if ($block->head === 'elseif') {
+                return "<?php elseif ($block->args): ?>";
+            }
+
+            if ($block->head === 'each') {
+                return "<?php foreach ($block->args): ?>";
+            }
+
+            throw new Exception("Unknown block head '$block->head' with args");
+        }
+
+        if ($head) {
+            if ($block->head === 'else') {
+                return "<?php else: ?>";
+            }
+
+            if ($block->head === 'if;') {
+                return "<?php endif ?>";
+            }
+
+            if ($block->head === 'each;') {
+                return "<?php endforeach ?>";
+            }
+
+            if(str_starts_with($block->head, '==')) {
+                $expression = substr($block->head, 2);
+                return "<?php echo $expression ?>";
+            }
+
+            if(str_starts_with($block->head, '#')) {
+                return "";
+            }
+
+            return "<?php echo htmlspecialchars(join(' ', [$block->head])) ?>";
+        }
+
+        if ($args) {
+            return "<?php $block->args; ?>";
+        }
+
+        throw new Exception("Illegal block");
+    }
+}
