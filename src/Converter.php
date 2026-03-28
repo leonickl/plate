@@ -21,10 +21,6 @@ class Converter
 
     private function convertBlock(object $block): string
     {
-        if (property_exists($block, 'html')) {
-            return $block->html;
-        }
-
         $head = property_exists($block, 'head') && $block->head !== '';
         $args = property_exists($block, 'args') && $block->args !== '';
 
@@ -78,6 +74,10 @@ class Converter
             }
 
             return "<?php echo htmlspecialchars(join(' ', [$block->args])) ?>";
+        }
+
+        if (property_exists($block, 'html')) {
+            return $block->html;
         }
 
         throw new Exception('Illegal block');

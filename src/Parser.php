@@ -108,6 +108,7 @@ class Parser
 
         // start a string
         if ($token === '"' || $token === "'") {
+            $this->state = State::ARGS;
             $this->string = $token;
 
             return 1;
