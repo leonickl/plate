@@ -2,11 +2,17 @@
 
 namespace LeoNickl\Plate;
 
+use Exception;
+
 class Parser
 {
     private State $state = State::HTML;
     private int $pos = 0;
 
+    private ?string $string = null;
+    private int $depth = 0;
+
+    private string $stringBuffer = '';
     private string $current = '';
     private array $parsed = [];
 
@@ -17,6 +23,16 @@ class Parser
         while ($this->pos < count($this->tokens)) {
             $this->pos += $this->handle();
         }
+
+        if ($this->string || $this->stringBuffer) {
+            throw new Exception("Unterminated string");
+        }
+
+        if ($this->state !== State::HTML) {
+            throw new Exception("Some block not terminated");
+        }
+
+        $this->memorizeAs('html', trim: false);
 
         return $this;
     }
@@ -45,7 +61,26 @@ class Parser
     private function handle(): int
     {
         $token = $this->tokens[$this->pos];
-        $next_token = $this->tokens[$this->pos];
+        $next_token = $this->tokens[$this->pos + 1] ?? null;
+
+        if ($this->string) {
+            if ($token === '\\') {
+                $this->stringBuffer .= '\\'.$next_token;
+                return 2;
+            }
+
+            // terminate a string
+            if ($token === $this->string) {
+                $this->current .= $this->string . $this->stringBuffer . $this->string;
+                $this->string = null;
+                $this->stringBuffer = '';
+                return 1;
+            }
+
+            // continue a string
+            $this->stringBuffer .= $token;
+            return 1;
+        }
 
         if ($this->state === State::HTML) {
             if ($token === '{' && $next_token === '{') {
@@ -58,10 +93,28 @@ class Parser
             return 1;
         }
 
+        // start a string
+        if ($token === '"' || $token === "'") {
+            $this->string = $token;
+            return 1;
+        }
+
         if ($this->state === State::HEAD) {
+            if ($token === '{') {
+                $this->depth++;
+                $this->current .= '{';
+                return 1;
+            }
+
             if ($token === ':') {
                 $this->memorizeAs('head', trim: true);
                 $this->state = State::ARGS;
+                return 1;
+            }
+
+            if ($this->depth > 0 && $token === '}') {
+                $this->depth--;
+                $this->current .= '}';
                 return 1;
             }
 
