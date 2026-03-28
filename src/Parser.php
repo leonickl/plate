@@ -6,6 +6,8 @@ use Exception;
 
 class Parser
 {
+    private const array KEYWORDS = ['if:', 'elseif:', 'else', 'each:', 'if;', 'each;'];
+
     private State $state = State::HTML;
 
     private int $pos = 0;
@@ -14,7 +16,9 @@ class Parser
 
     private int $depth = 0;
 
-    private string $stringBuffer = '';
+    private bool $comment = false;
+
+    private string $buffer = '';
 
     private string $current = '';
 
@@ -28,7 +32,7 @@ class Parser
             $this->pos += $this->handle();
         }
 
-        if ($this->string || $this->stringBuffer) {
+        if ($this->string || $this->buffer) {
             throw new Exception('Unterminated string');
         }
 
@@ -69,22 +73,22 @@ class Parser
 
         if ($this->string) {
             if ($token === '\\') {
-                $this->stringBuffer .= '\\'.$next_token;
+                $this->buffer .= '\\'.$next_token;
 
                 return 2;
             }
 
             // terminate a string
             if ($token === $this->string) {
-                $this->current .= $this->string.$this->stringBuffer.$this->string;
+                $this->current .= $this->string.$this->buffer.$this->string;
                 $this->string = null;
-                $this->stringBuffer = '';
+                $this->buffer = '';
 
                 return 1;
             }
 
             // continue a string
-            $this->stringBuffer .= $token;
+            $this->buffer .= $token;
 
             return 1;
         }
@@ -110,16 +114,42 @@ class Parser
         }
 
         if ($this->state === State::HEAD) {
-            if ($token === '{') {
-                $this->depth++;
-                $this->current .= '{';
+            if (str_contains(" \n\r\t\v\x00", $token)) {
+                return 1;
+            }
+
+            // take only lowercase letters for head
+            if (str_contains('abcdefghijklmnopqrstuvwxyz:;', $token)) {
+                $this->buffer .= $token;
 
                 return 1;
             }
 
-            if ($token === ':') {
+            if (in_array($this->buffer, self::KEYWORDS)) {
+                $this->current = $this->buffer;
+                $this->buffer = '';
+
                 $this->memorizeAs('head', trim: true);
                 $this->state = State::ARGS;
+
+                return 0;
+            }
+
+            // add empty head
+            $this->memorizeAs('head', trim: true);
+
+            $this->current = $this->buffer;
+            $this->buffer = '';
+
+            $this->state = State::ARGS;
+
+            return 0;
+        }
+
+        if ($this->state === State::ARGS) {
+            if ($token === '{') {
+                $this->depth++;
+                $this->current .= '{';
 
                 return 1;
             }
@@ -132,23 +162,28 @@ class Parser
             }
 
             if ($token === '}' && $next_token === '}') {
-                $this->memorizeAs('head', trim: true);
+                if ($this->comment) {
+                    $this->current .= '#'.$this->buffer;
+                    $this->buffer = '';
+                    $this->comment = false;
+                }
+
+                $this->memorizeAs('args', trim: true, extend: true);
                 $this->state = State::HTML;
 
                 return 2;
             }
 
-            $this->current .= $token;
+            if ($token === '#') {
+                $this->comment = true;
 
-            return 1;
-        }
+                return 1;
+            }
 
-        if ($this->state === State::ARGS) {
-            if ($token === '}' && $next_token === '}') {
-                $this->memorizeAs('args', trim: true, extend: true);
-                $this->state = State::HTML;
+            if ($this->comment) {
+                $this->buffer .= $token;
 
-                return 2;
+                return 1;
             }
 
             $this->current .= $token;

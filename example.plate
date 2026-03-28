@@ -10,6 +10,7 @@
         {{ :$var = "<p>no</p>" }}
     {{ if; }}
 
+    {{ true ? 'yes' : 'no' }}
 
 {{ # printing }}
 
@@ -25,7 +26,7 @@
     {{ # multiple expressions joined with a space: }}
     {{ 1, 2, 3 }}
 
-{{ # foreach loop: }}
+{{ # loops: }}
 
     {{ each: [1, 2, 3, 8, 10] as $x }}
         {{ -$x, "\n" }}

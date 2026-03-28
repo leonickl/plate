@@ -29,15 +29,15 @@ class Converter
         $args = property_exists($block, 'args') && $block->args !== '';
 
         if ($head && $args) {
-            if ($block->head === 'if') {
+            if ($block->head === 'if:') {
                 return "<?php if ($block->args): ?>";
             }
 
-            if ($block->head === 'elseif') {
+            if ($block->head === 'elseif:') {
                 return "<?php elseif ($block->args): ?>";
             }
 
-            if ($block->head === 'each') {
+            if ($block->head === 'each:') {
                 return "<?php foreach ($block->args): ?>";
             }
 
@@ -57,21 +57,27 @@ class Converter
                 return '<?php endforeach ?>';
             }
 
-            if (str_starts_with($block->head, '==')) {
-                $expression = substr($block->head, 2);
+            throw new Exception("Unknown block head '$block->head' without args");
+        }
+
+        if ($args) {
+            if (str_starts_with($block->args, '#')) {
+                return '';
+            }
+
+            if (str_starts_with($block->args, '==')) {
+                $expression = substr($block->args, 2);
 
                 return "<?php echo $expression ?>";
             }
 
-            if (str_starts_with($block->head, '#')) {
-                return '';
+            if (str_starts_with($block->args, ':')) {
+                $expression = substr($block->args, 1);
+
+                return "<?php $expression ?>";
             }
 
-            return "<?php echo htmlspecialchars(join(' ', [$block->head])) ?>";
-        }
-
-        if ($args) {
-            return "<?php $block->args; ?>";
+            return "<?php echo htmlspecialchars(join(' ', [$block->args])) ?>";
         }
 
         throw new Exception('Illegal block');
