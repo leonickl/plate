@@ -13,5 +13,7 @@
             "email": "leo@leonickl.de"
         }
     ],
-    "require": {}
+    "require": {
+        "php": ">=8.4"
+    }
 }
