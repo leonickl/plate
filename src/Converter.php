@@ -41,7 +41,7 @@ class Converter
         }
 
         if ($head) {
-            if ($block->head === 'else') {
+            if ($block->head === 'else:') {
                 return '<?php else: ?>';
             }
 

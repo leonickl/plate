@@ -6,7 +6,7 @@
         {{ :$var = "<p>hidden</p>" }}
     {{ elseif: 5 < 9}}
         {{ :$var = "<p>also yes</p>" }}
-    {{ else }}
+    {{ else: }}
         {{ :$var = "<p>no</p>" }}
     {{ if; }}
 

@@ -6,7 +6,7 @@ use Exception;
 
 class Parser
 {
-    private const array KEYWORDS = ['if:', 'elseif:', 'else', 'each:', 'if;', 'each;'];
+    private const array KEYWORDS = ['if:', 'elseif:', 'else:', 'each:', 'if;', 'each;'];
 
     private State $state = State::HTML;
 
@@ -115,17 +115,6 @@ class Parser
         }
 
         if ($this->state === State::HEAD) {
-            if (str_contains(" \n\r\t\v\x00", $token)) {
-                return 1;
-            }
-
-            // take only lowercase letters for head
-            if (str_contains('abcdefghijklmnopqrstuvwxyz:;', $token)) {
-                $this->buffer .= $token;
-
-                return 1;
-            }
-
             if (in_array($this->buffer, self::KEYWORDS)) {
                 $this->current = $this->buffer;
                 $this->buffer = '';
@@ -136,7 +125,18 @@ class Parser
                 return 0;
             }
 
-            // add empty head
+            if (str_contains(" \n\r\t\v\x00", $token)) {
+                return 1;
+            }
+
+            // take only lowercase letters and (semi)colon for head
+            if (str_contains('abcdefghijklmnopqrstuvwxyz:;', $token)) {
+                $this->buffer .= $token;
+
+                return 1;
+            }
+
+            // add empty head if no whitespace or valid header symbol found
             $this->memorizeAs('head', trim: true);
 
             $this->current = $this->buffer;
