@@ -1,0 +1,32 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1c1917"/>
+      <stop offset="100%" stop-color="#0c0a09"/>
+    </radialGradient>
+
+    <radialGradient id="plate" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e7e5e4"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Plate -->
+  <circle cx="128" cy="128" r="96" fill="url(#plate)"/>
+
+  <!-- Rim -->
+  <circle cx="128" cy="128" r="96" fill="none" stroke="#c2410c" stroke-width="12"/>
+
+  <!-- Inner rim -->
+  <circle cx="128" cy="128" r="72" fill="none" stroke="#e7e5e4" stroke-width="4"/>
+
+  <!-- Code symbol (sharper + more spacing) -->
+  <g stroke="#c2410c" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- < -->
+    <polyline points="104,104 76,128 104,152"/>
+    <!-- / -->
+    <line x1="120" y1="158" x2="136" y2="98"/>
+    <!-- > -->
+    <polyline points="152,104 180,128 152,152"/>
+  </g>
+</svg>

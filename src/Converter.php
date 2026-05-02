@@ -29,7 +29,7 @@ class Converter
                 return "<?php if ($block->args): ?>";
             }
 
-            if ($block->head === 'elseif:') {
+            if ($block->head === 'elif:') {
                 return "<?php elseif ($block->args): ?>";
             }
 

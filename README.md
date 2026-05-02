@@ -1,10 +1,93 @@
-# Plate – a templating engine
+<p align="center">
+  <img src="icon.svg" alt="Plate" width="128" height="128">
+</p>
 
-The name is derived from Laravel's "blade". Blade offers a simple templating engine that can be compiled to a regular PHP file.
+<h1 align="center">Plate</h1>
 
-Examples can be found in `example.plate`. Try running `php index.php | php` to compile the example to view the compiles PHP.
+<p align="center">A lightweight PHP templating engine inspired by Laravel's Blade.</p>
 
-Compilation is achieved calling `LeoNickl\Plate\Plate::file('filename.plate')` whose result can be cast to a string that contains the PHP code.
+---
 
-Plate directives are embraced in double curly braces (`{{ "hello" }}`). A single expression or multiple expressions separated by commas are escaped and then printed. Prefixing a single expression with `==` omits escaping. Using `:`as a prefix, nothing is printed, but the raw following PHP code is executed.
-Conditional rendering with `if`, `elseif`, and `else` is supported, as well as foreach loops with `each`. For details, seee `example.plate`.
+## Features
+
+- Simple, expressive syntax with `{{ }}` delimiters
+- Automatic output escaping for security
+- Conditional rendering with `if`, `elif`, and `else`
+- Loop support with `each`
+- Raw PHP execution within templates
+- Compiles to plain PHP for optimal performance
+
+## Requirements
+
+- PHP >= 8.4
+
+## Installation
+
+```bash
+composer require leonickl/plate
+```
+
+## Usage
+
+```php
+<?php
+
+require 'vendor/autoload.php';
+
+use LeoNickl\Plate\Plate;
+
+// Compile a .plate file to PHP code
+$phpCode = Plate::file('view.plate');
+
+// Cast to string to get the compiled PHP
+echo (string) $phpCode;
+```
+
+## Template Syntax
+
+### Printing Values
+
+```plate
+{{ "hello" }}              // Escaped output
+{{ ==$html }}              // Unescaped output
+{{ "hello", "world" }}     // Multiple expressions (joined with space)
+{{ :$var = "test" }}       // Execute PHP without printing
+```
+
+### Conditionals
+
+```plate
+{{ if: $condition }}
+    <p>Yes!</p>
+{{ elif: $other }}
+    <p>Maybe!</p>
+{{ else: }}
+    <p>No!</p>
+{{ if; }}
+```
+
+### Loops
+
+```plate
+{{ each: $items as $item }}
+    <p>{{ $item }}</p>
+{{ each; }}
+```
+
+## Example
+
+See `example.plate` for a complete example. Run it with:
+
+```bash
+php index.php | php
+```
+
+This compiles the template and executes the resulting PHP.
+
+## Syntax Highlighting
+
+Available for VSCode [leonickl/plate-vscode](https://github.com/leonickl/plate-vscode.git)
+
+## License
+
+MIT
