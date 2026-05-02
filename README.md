@@ -87,7 +87,3 @@ This compiles the template and executes the resulting PHP.
 ## Syntax Highlighting
 
 Available for VSCode [leonickl/plate-vscode](https://github.com/leonickl/plate-vscode.git)
-
-## License
-
-MIT
