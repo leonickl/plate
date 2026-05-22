@@ -74,6 +74,22 @@ echo (string) $phpCode;
 {{ each; }}
 ```
 
+### Import Components
+
+```plate
+{{ plug: 'nav' }}
+{{ plug: 'person', data: $person }}
+```
+
+In order for this to work, you need to define this function and adjust it to your environment:
+
+```php
+function plug_plate(string $file, mixed ...$params): string
+{
+    return view($file, $params); // or however you import your views
+}
+```
+
 ## Example
 
 See `example.plate` for a complete example. Run it with:

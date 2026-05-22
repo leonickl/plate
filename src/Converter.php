@@ -37,6 +37,10 @@ class Converter
                 return "<?php foreach ($block->args): ?>";
             }
 
+            if ($block->head === 'plug:') {
+                return "<?php echo plug_plate($block->args) ?>";
+            }
+
             throw new Exception("Unknown block head '$block->head' with args");
         }
 

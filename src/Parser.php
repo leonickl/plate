@@ -6,7 +6,9 @@ use Exception;
 
 class Parser
 {
-    private const array KEYWORDS = ['if:', 'elif:', 'else:', 'each:', 'if;', 'each;'];
+    private const array KEYWORDS = [
+        'if:', 'elif:', 'else:', 'each:', 'if;', 'each;', 'plug:',
+    ];
 
     private State $state = State::HTML;
 
