@@ -3,11 +3,11 @@
 <h2>conditional rendering</h2>
 
 {{ if: 4 > 8 }}
-    {{ :$var = "<p>hidden</p>" }}
+    {{ php: $var = "<p>hidden</p>" }}
 {{ elif: 5 < 9}}
-    {{ :$var = "<p>also yes</p>" }}
+    {{ php: $var = "<p>also yes</p>" }}
 {{ else: }}
-    {{ :$var = "<p>no</p>" }}
+    {{ php: $var = "<p>no</p>" }}
 {{ if; }}
 
 {{ true ? 'yes' : 'no' }}
@@ -19,7 +19,7 @@
 {{ $var }}
 
 {{ # unescaped: }}
-{{ ==$var }}
+{{ % $var }}
 
 {{ # single expression: }}
 {{ "huhu" }}

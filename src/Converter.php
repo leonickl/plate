@@ -41,6 +41,10 @@ class Converter
                 return "<?php echo plug_plate($block->args) ?>";
             }
 
+            if ($block->head === 'php:') {
+                return "<?php $block->args ?>";
+            }
+
             throw new Exception("Unknown block head '$block->head' with args");
         }
 
@@ -65,16 +69,10 @@ class Converter
                 return '';
             }
 
-            if (str_starts_with($block->args, '==')) {
+            if (str_starts_with($block->args, '%')) {
                 $expression = substr($block->args, 2);
 
                 return "<?php echo $expression ?>";
-            }
-
-            if (str_starts_with($block->args, ':')) {
-                $expression = substr($block->args, 1);
-
-                return "<?php $expression ?>";
             }
 
             return "<?php echo htmlspecialchars(join(' ', [$block->args])) ?>";
