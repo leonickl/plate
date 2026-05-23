@@ -51,6 +51,11 @@ echo (string) $phpCode;
 {{ "hello" }}              // Escaped output
 {{ ==$html }}              // Unescaped output
 {{ "hello", "world" }}     // Multiple expressions (joined with space)
+```
+
+### Execute PHP statement
+
+```plate
 {{ :$var = "test" }}       // Execute PHP without printing
 ```
 
