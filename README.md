@@ -49,7 +49,7 @@ echo (string) $phpCode;
 
 ```plate
 {{ "hello" }}              // Escaped output
-{{ ==$html }}              // Unescaped output
+{{ % $html }}              // Unescaped output
 {{ "hello", "world" }}     // Multiple expressions (joined with space)
 ```
 
